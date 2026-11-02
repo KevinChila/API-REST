@@ -1,0 +1,24 @@
+{
+  "info": {
+    "name": "Inventario API REST - U2",
+    "description": "Flujo de registro, login y CRUD. Ejecutar con MongoDB y API activos en localhost:3000.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key":"baseUrl","value":"http://localhost:32123"},
+    {"key":"email","value":"alumno@example.com"},
+    {"key":"password","value":"ClaveSegura123"},
+    {"key":"token","value":""},
+    {"key":"productId","value":""}
+  ],
+  "item": [
+    {"name":"1. Registrar usuario","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}","options":{"raw":{"language":"json"}}},"url":"{{baseUrl}}/api/auth/register"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('registro: 201 o cuenta ya existente', function () { pm.expect([201,409]).to.include(pm.response.code); });"]}}]},
+    {"name":"2. Iniciar sesión","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}","options":{"raw":{"language":"json"}}},"url":"{{baseUrl}}/api/auth/login"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('login: 200', function () { pm.response.to.have.status(200); });","const json = pm.response.json();","pm.collectionVariables.set('token', json.data.token);"]}}]},
+    {"name":"3. Crear producto","request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"nombre\": \"Producto demo\",\n  \"precio\": 12.5,\n  \"descripcion\": \"Creado desde Postman\"\n}","options":{"raw":{"language":"json"}}},"url":"{{baseUrl}}/api/products"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('creación: 201', function () { pm.response.to.have.status(201); });","const json = pm.response.json();","pm.collectionVariables.set('productId', json.data._id);"]}}]},
+    {"name":"4. Listar productos","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{token}}"}],"url":"{{baseUrl}}/api/products?page=1&limit=20"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('lista: 200 y data/meta', function () { pm.response.to.have.status(200); const json=pm.response.json(); pm.expect(json.data).to.be.an('array'); pm.expect(json.meta).to.have.property('total'); });"]}}]},
+    {"name":"5. Consultar producto","request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{token}}"}],"url":"{{baseUrl}}/api/products/{{productId}}"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('detalle: 200', function () { pm.response.to.have.status(200); });"]}}]},
+    {"name":"6. Actualizar producto","request":{"method":"PATCH","header":[{"key":"Authorization","value":"Bearer {{token}}"},{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"precio\": 14.99\n}","options":{"raw":{"language":"json"}}},"url":"{{baseUrl}}/api/products/{{productId}}"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('actualización: 200', function () { pm.response.to.have.status(200); });"]}}]},
+    {"name":"7. Eliminar producto","request":{"method":"DELETE","header":[{"key":"Authorization","value":"Bearer {{token}}"}],"url":"{{baseUrl}}/api/products/{{productId}}"},"event":[{"listen":"test","script":{"type":"text/javascript","exec":["pm.test('eliminación: 204', function () { pm.response.to.have.status(204); });"]}}]}
+  ]
+}
+

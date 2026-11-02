@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos - MiInventarioExpress</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">MiInventarioExpress</a>
+            <nav>
+                <ul>
+                    <li><a href="/productos">Productos</a></li>
+                    <li><a href="/productos/nuevo">Crear Producto</a></li>
+                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </nav>
+
+    <div class="container" style="padding-top: 30px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="color: #2c3e50;">Lista de Productos</h1>
+            <a href="/productos/nuevo" class="btn btn-primary">Crear Nuevo Producto</a>
+        </div>
+
+        {{#if errores}}
+            <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <ul>
+                    {{#each errores}}
+                        <li>{{this.msg}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+
+        {{#if productos}}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                {{#each productos}}
+                    <div class="product-card">
+                        {{#if this.imagen}}
+                            <img src="/uploads/{{this.imagen}}" alt="{{this.nombre}}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 4px; margin-bottom: 15px;">
+                        {{/if}}
+                        <h3>{{this.nombre}}</h3>
+                        <p class="product-price">${{this.precio}}</p>
+                        <p>{{this.descripcion}}</p>
+                        <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 15px;">
+                            <a href="/productos/editar/{{this._id}}" class="btn btn-secondary" style="flex: 1;">Editar</a>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        {{else}}
+            <div style="text-align: center; padding: 50px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h2 style="color: #7f8c8d;">No hay productos aún</h2>
+                <p style="color: #95a5a6; margin-bottom: 20px;">¡Crea tu primer producto para empezar!</p>
+                <a href="/productos/nuevo" class="btn btn-primary">Crear Primer Producto</a>
+            </div>
+        {{/if}}
+    </div>
+</body>
+</html>

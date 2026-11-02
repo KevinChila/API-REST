@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - MiInventarioExpress</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">MiInventarioExpress</a>
+            <nav>
+                <ul>
+                    {{#if session}}
+                        <li><a href="/productos">Productos</a></li>
+                        <li><a href="/productos/nuevo">Crear Producto</a></li>
+                        <li><a href="/chat">Chat</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    {{else}}
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Registro</a></li>
+                    {{/if}}
+                </ul>
+            </nav>
+        </div>
+    </nav>
+
+    <main class="container">
+        {{{body}}}
+    </main>
+</body>
+</html>

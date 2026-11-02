@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - MiInventarioExpress</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/" class="logo">MiInventarioExpress</a>
+            <nav>
+                <ul>
+                    <li><a href="/productos">Productos</a></li>
+                    <li><a href="/productos/nuevo">Crear Producto</a></li>
+                    <li><a href="/chat">Chat</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </nav>
+
+    <h1 style="text-align: center; margin: 30px 0; color: #2c3e50;">Chat en Tiempo Real</h1>
+
+    <div id="chat-container">
+        <ul id="mensajes"></ul>
+        
+        <div class="chat-input-area">
+            <input id="mensaje" type="text" placeholder="Escribe tu mensaje..." style="flex: 1;">
+            <button onclick="enviar()" class="btn btn-primary">Enviar</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        const socket = io();
+        const input = document.getElementById('mensaje');
+        function enviar() {
+            const mensaje = input.value.trim();
+            if (mensaje) { socket.emit('mensaje', mensaje); input.value = ''; }
+        }
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') enviar(); });
+        socket.on('mensaje', (msg) => mostrarMensaje(`${msg.autor}: ${msg.texto}`));
+        socket.on('connect_error', () => mostrarMensaje('No se pudo conectar: inicia sesión nuevamente.'));
+        function mostrarMensaje(texto) {
+            const li = document.createElement('li');
+            li.textContent = texto;
+            li.style.marginBottom = '5px';
+            document.getElementById('mensajes').appendChild(li);
+            const mensajes = document.getElementById('mensajes');
+            mensajes.scrollTop = mensajes.scrollHeight;
+        }
+    </script>
+</body>
+</html>
+
